@@ -1,0 +1,12 @@
+# ===========================
+#  Namespace (/** es todo)
+# ===========================
+/**:
+  # ===================
+  #     NODO
+  # ===================
+  ros__parameters:
+    # ----- ME00_camera PARAMS -----
+    autorun: true
+    topics: ["/chatter", "/chatter2"]
+    rosbag_folder: "/log"

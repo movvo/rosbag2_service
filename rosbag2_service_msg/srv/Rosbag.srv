@@ -1,0 +1,3 @@
+string path #Path and name of the file
+---
+bool result
