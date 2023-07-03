@@ -64,6 +64,7 @@ bool Rosbag2Service::Initialize()
         RCLCPP_ERROR(nh_->get_logger(), exc.what());
         return false;
     }
+    RCLCPP_INFO(nh_->get_logger(), "Holi");
     return true;
 }
 

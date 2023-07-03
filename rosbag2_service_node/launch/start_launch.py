@@ -2,21 +2,25 @@
    Copyright 2023 @ MOVVO ROBOTICS
    ---------------------------------------------------------
    Authors: Bernat Gaston
-   Contact: support.idi@ageve.net
+   Contact: bernat.gaston@movvo.eu
 """
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch_ros.actions import Node
 
-from ageve_utils.launch.start import QuickClass
-from ageve_utils.general.yaml import getNamespace
-from ageve_utils.general.system import getPkgName
-    
 def generate_launch_description():
-
-   Package = getPkgName(__file__)
-   namespace = getNamespace(Package) # En caso de usar sin bringup utilizar getNamespace(Package, standalone=True)
-   launcher = QuickClass(Package, namespace)
-   nodes = launcher.getPkgNodes("me00_bringup")
-   for node in nodes:
-      nodes_dic = launcher.set_dictionary(package=Package, ros_name=node, log="info")
-   return launcher.launch_nodes(nodes_dic)
-
     
+   config = os.path.join(
+   get_package_share_directory('rosbag2_service'),
+   'config',
+   'params.yaml'
+   )
+   return LaunchDescription([
+      Node(
+         package='rosbag2_service',
+         namespace='rosbag2_service',
+         executable='rosbag2_service',
+         parameters = [config]
+      )
+    ])

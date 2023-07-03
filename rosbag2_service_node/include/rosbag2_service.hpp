@@ -49,7 +49,6 @@ class Rosbag2Service
   {
     rclcpp::Parameter autorun;
     rclcpp::Parameter topics;
-    rclcpp::Parameter rosbag_folder;
   } configuration;
   configuration parameters; /*< Parameters of the node loaded from yaml*/
 
