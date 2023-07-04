@@ -14,17 +14,19 @@ RUN sed --in-place \
       /ros_entrypoint.sh
 
 # Install dependencies
-RUN apt-get update -qq && \
-    apt-get upgrade -qq -y --with-new-pkgs && \
-    apt-get install -qq -y \
+RUN apt update -qq && \
+    apt upgrade -qq -y --with-new-pkgs && \
+    apt install -qq -y \
       valgrind \
       ros-$ROS_DISTRO-rmw-fastrtps-cpp \
       ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-    apt-get remove -y ros-humble-rosbag2-cpp \
+      ros-$ROS_DISTRO-test-msgs &&\
+    apt remove -y ros-$ROS_DISTRO-rosbag2-cpp \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./rosbag2_service_msg ./src/rosbag2_service_msg
 COPY ./rosbag2_service_node ./src/rosbag2_service_node
+COPY ./rosbag2 ./src/rosbag2
 
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
     colcon build \

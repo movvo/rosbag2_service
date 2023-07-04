@@ -1,11 +1,10 @@
 # rosbag_service
 
-ROSBAG log functionality
+ROSBAG log service functionality
 
-## Use
-Rosbags are stored in $ME00_FOLDERS/log/rosbags. Compressed saved rosbags are in $ME00_FOLDERS/log/compressed
-
-ros2 launch me00_bringup start_launch.py 
+## Install
+git submodule init
+git submodule update
 
 **Activate**
 
