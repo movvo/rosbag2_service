@@ -4,8 +4,8 @@
   <name>rosbag2_service</name>
   <version>1.0.0</version>
   <description>Node that implements services related to rosbag2</description>
-  <maintainer email="bernat.gaston@movvo.eu">
-      Bernat Gastón,
+  <maintainer email="support.idi@movvo.eu">
+      Bernat Gastón, Maria Mercadé Martí bolet
   </maintainer>
   <license>Movvo Robotics - MIT</license>
 

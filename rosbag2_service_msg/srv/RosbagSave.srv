@@ -1,0 +1,4 @@
+string path #Path of the folder containing the rosbag
+string compressed_path #Path of the folder to store the compressed rosbag
+---
+bool result

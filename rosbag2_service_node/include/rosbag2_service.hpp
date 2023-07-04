@@ -1,7 +1,7 @@
 /*
    Copyright 2023 @ MOVVO ROBOTICS
    ---------------------------------------------------------
-   Authors: Bernat Gaston
+   Authors: Bernat Gaston, Maria Mercadé, Martí Bolet
    Contact: support.idi@ageve.net
 */
 
@@ -21,10 +21,8 @@
 #include "rosbag2_compression_zstd/zstd_compressor.hpp"
 
 //Services
-#include "rosbag2_service_msg/srv/rosbag.hpp"
-
-// OWN node
-#include "errors.hpp"
+#include "rosbag2_service_msg/srv/rosbag_start.hpp"
+#include "rosbag2_service_msg/srv/rosbag_save.hpp"
 
 
 namespace rosbag2_service{
@@ -63,8 +61,8 @@ class Rosbag2Service
       @param[in] response response of the service
   */
   void RosbagStartSrvCallback(
-    const std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Request> req,
-    std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Response> response);
+    const std::shared_ptr<rosbag2_service_msg::srv::RosbagStart::Request> req,
+    std::shared_ptr<rosbag2_service_msg::srv::RosbagStart::Response> response);
   /*!
       @brief Stop the rosbag service storing information
       @param[in] response response of the service
@@ -78,8 +76,8 @@ class Rosbag2Service
       @param[in] response response of the service
   */
   void RosbagSaveSrvCallback(
-    const std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Request> req,
-    std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Response> response);
+    const std::shared_ptr<rosbag2_service_msg::srv::RosbagSave::Request> req,
+    std::shared_ptr<rosbag2_service_msg::srv::RosbagSave::Response> response);
   /*!
       @brief Callback, one per topic
       @param[in] msg message to store
@@ -95,11 +93,11 @@ class Rosbag2Service
   rcl_interfaces::msg::SetParametersResult dyn_reconf_callback(
     const std::vector<rclcpp::Parameter> & parameters);
 
-  rclcpp::Service<rosbag2_service_msg::srv::Rosbag>::SharedPtr rosbagstart_srv_; 
+  rclcpp::Service<rosbag2_service_msg::srv::RosbagStart>::SharedPtr rosbagstart_srv_; 
   /*< Variable to store the service of the start rosbag*/
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr rosbagstop_srv_; /*< 
   Variable to store the service of the stop rosbag*/
-  rclcpp::Service<rosbag2_service_msg::srv::Rosbag>::SharedPtr rosbagsave_srv_; /*
+  rclcpp::Service<rosbag2_service_msg::srv::RosbagSave>::SharedPtr rosbagsave_srv_; /*
   < Variable to store the service of the save rosbag*/
   std::vector<rclcpp::GenericSubscription::SharedPtr> subs_vector_; /*< 
   Variable to store the diferent callbacks created for each topic*/

@@ -1,13 +1,14 @@
 /*
    Copyright 2023 @ MOVVO ROBOTICS
    ---------------------------------------------------------
-   Authors: Bernat Gaston
+   Authors: Bernat Gaston, Maria Mercadé, Martí Bolet
    Contact: support.idi@movvo.eu
 */
 
 #include "rosbag2_service.hpp"
 #include <vector>
 #include "rclcpp/create_generic_subscription.hpp"
+#include <filesystem>
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -25,13 +26,13 @@ Rosbag2Service::Rosbag2Service(rclcpp::Node::SharedPtr nh)
     nh_ = nh;
 
     // Create services
-    rosbagstart_srv_ = nh_->create_service<rosbag2_service_msg::srv::Rosbag>(
+    rosbagstart_srv_ = nh_->create_service<rosbag2_service_msg::srv::RosbagStart>(
         nh_->get_name() + std::string("/rosbag_start_srv"), 
         std::bind(&Rosbag2Service::RosbagStartSrvCallback, this, _1, _2));
     rosbagstop_srv_ = nh_->create_service<std_srvs::srv::Trigger>(
         nh_->get_name() + std::string("/rosbag_stop_srv"), 
         std::bind(&Rosbag2Service::RosbagStopSrvCallback, this, _1, _2));
-    rosbagsave_srv_ = nh_->create_service<rosbag2_service_msg::srv::Rosbag>(
+    rosbagsave_srv_ = nh_->create_service<rosbag2_service_msg::srv::RosbagSave>(
         nh_->get_name() + std::string("/rosbag_save_srv"), 
         std::bind(&Rosbag2Service::RosbagSaveSrvCallback, this, _1, _2));
 
@@ -64,7 +65,6 @@ bool Rosbag2Service::Initialize()
         RCLCPP_ERROR(nh_->get_logger(), exc.what());
         return false;
     }
-    RCLCPP_INFO(nh_->get_logger(), "Holi");
     return true;
 }
 
@@ -75,8 +75,8 @@ bool Rosbag2Service::Initialize()
 
 //=============================================================================
 void Rosbag2Service::RosbagStartSrvCallback(
-    const std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Request> req,
-    std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Response> response)
+    const std::shared_ptr<rosbag2_service_msg::srv::RosbagStart::Request> req,
+    std::shared_ptr<rosbag2_service_msg::srv::RosbagStart::Response> response)
 //=============================================================================
 {
     // Obtain filepath
@@ -160,33 +160,47 @@ void Rosbag2Service::RosbagStopSrvCallback(
 
 //=============================================================================
 void Rosbag2Service::RosbagSaveSrvCallback(
-    const std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Request> req,
-    std::shared_ptr<rosbag2_service_msg::srv::Rosbag::Response> response)
+    const std::shared_ptr<rosbag2_service_msg::srv::RosbagSave::Request> req,
+    std::shared_ptr<rosbag2_service_msg::srv::RosbagSave::Response> response)
 //=============================================================================
 
 {
-    // Obtain filepath
-    std::string rosbag_uri = req->path;
-    std::string compressed_uri = req->path;
-    RCLCPP_INFO(nh_->get_logger(), "Compressing rosbag file %s", 
-        rosbag_uri.c_str());
-
-    //TODO: This code may be used to compress the file, but it needs the .db3 
-    //file and not only the folder, which does not compress the metadata file.
-    //Even if it does a better job than tar.gz, you still can't skip this step
-    //so only if tar.gz is not enough we may think on doing the zstd, removing
-    //the .db3 and then compressing the folder again
-    /*current_uri = current_uri + "/my_bag_0.db3";
+    // Initialize
+    bool did_compress = false;
+    // Create compressor
     auto zstd_compressor = rosbag2_compression_zstd::ZstdCompressor{};
-    std::string compressed_path_uri = 
-    zstd_compressor.compress_uri(current_uri); 
-    RCLCPP_INFO(nh_->get_logger(), "Compressed rosbag file is %s", 
-        compressed_path_uri.c_str());*/
-    std::string tar_command = "tar -czf " + compressed_uri + ".tar.gz " 
-        + rosbag_uri;
-    system(tar_command.c_str());
-    RCLCPP_INFO(nh_->get_logger(), "Compressing file with %s", 
-        tar_command.c_str());
+    // Obtain filepath
+    std::string origin_uri = req->path;
+    std::string destination_uri = req->compressed_path;
+    // Compress process
+    RCLCPP_INFO(nh_->get_logger(), "Compressing rosbag file %s", 
+        origin_uri.c_str());
+    for (const auto & entry : std::filesystem::directory_iterator(origin_uri)){
+        auto path_entry = entry.path();
+        auto extension = path_entry.extension();
+        if(extension.compare(".db3") == 0){
+            did_compress = true;
+            std::string compressed_path_uri =  
+                zstd_compressor.compress_uri(path_entry); 
+        }
+    // Clean process
+    if (did_compress){
+        RCLCPP_INFO(nh_->get_logger(), "Moving compressed files to %s", 
+                destination_uri.c_str());
+        std::filesystem::copy(origin_uri, destination_uri);
+        for (const auto & entry : std::filesystem::directory_iterator(destination_uri)) {
+            auto path_entry = entry.path();
+            auto extension = path_entry.extension();
+            if(extension.compare(".db3") == 0){
+                std::filesystem::remove(path_entry);
+            }
+        }
+    }
+    else{
+        RCLCPP_WARN(nh_->get_logger(), "Nothing compressed, aborting");
+    }
+        
+    }
     response->result = true;
 }
 

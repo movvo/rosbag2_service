@@ -1,0 +1,3 @@
+string path #Path of the file to create
+---
+bool result

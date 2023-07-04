@@ -1,7 +1,7 @@
 /*
    Copyright 2023 @ MOVVO ROBOTICS
    ---------------------------------------------------------
-   Authors: Bernat Gaston
+   Authors: Bernat Gaston, Maria Mercadé, Martí Bolet
    Contact: support.idi@movvo.eu
 */
 

@@ -26,7 +26,8 @@ find_package(std_msgs REQUIRED)
 
 
 set(srv_files
-  "srv/Rosbag.srv"
+  "srv/RosbagStart.srv"
+  "srv/RosbagSave.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
