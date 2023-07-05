@@ -12,9 +12,9 @@ else
 fi
 
 if [ $# -eq 0 ]; then
-    echo "Build of rosbag2_service_node. Building as latest"
-    docker build -t rosbag2_service_node:latest .
+    echo "Build of rosbag2_service. Building as latest"
+    docker build -t rosbag2_service:latest .
 else
-    echo "Build of rosbag2_service_node. Building as $1"
-    docker build -t rosbag2_service_node:$1 --build-arg TAG=$1 .
+    echo "Build of rosbag2_service. Building as $1"
+    docker build -t rosbag2_service:$1 --build-arg TAG=$1 .
 fi
