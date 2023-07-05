@@ -10,6 +10,8 @@ WORKDIR $WORKSPACE
 # source overlay from entrypoint
 ENV WORKSPACE $WORKSPACE
 
+RUN mkdir /log/rosbag
+
 RUN sed --in-place \
       's|^source .*|source "$WORKSPACE/install/setup.bash"|' \
       /ros_entrypoint.sh
