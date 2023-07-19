@@ -1,5 +1,4 @@
 ARG TAG=latest
-FROM geo_interfaces:${TAG} as geo_inter
 FROM ros:humble
 
 ARG ROS_DISTRO=humble
@@ -30,8 +29,7 @@ RUN apt update -qq && \
 COPY ./rosbag2_service_msg ./src/rosbag2_service_msg
 COPY ./rosbag2_service_node ./src/rosbag2_service_node
 COPY ./rosbag2 ./src/rosbag2
-COPY --from=geo_inter /ros2_ws/src/geo_interfaces /ros2_ws/src/geo_interfaces
-
+COPY ./ageve_interfaces ./src/ageve_interfaces
 
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
     colcon build \
