@@ -29,7 +29,6 @@ RUN apt update -qq && \
 COPY ./rosbag2_service_msg ./src/rosbag2_service_msg
 COPY ./rosbag2_service_node ./src/rosbag2_service_node
 COPY ./rosbag2 ./src/rosbag2
-COPY ./ageve_interfaces ./src/ageve_interfaces
 
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
     colcon build \
