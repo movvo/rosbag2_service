@@ -2,6 +2,4 @@
 	path = rosbag2
 	url = https://github.com/movvo/rosbag2
     branch = humble_movvo
-[submodule "ageve_interfaces"]
-	path = ageve_interfaces
-	url = https://github.com/movvo/ageve_interfaces.git
+
