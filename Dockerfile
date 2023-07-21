@@ -23,13 +23,11 @@ RUN apt update -qq && \
       valgrind \
       ros-$ROS_DISTRO-rmw-fastrtps-cpp \
       ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-      ros-$ROS_DISTRO-test-msgs &&\
-    apt remove -y ros-$ROS_DISTRO-rosbag2-cpp \
+      ros-$ROS_DISTRO-test-msgs \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./rosbag2_service_msg ./src/rosbag2_service_msg
 COPY ./rosbag2_service_node ./src/rosbag2_service_node
-COPY ./rosbag2 ./src/rosbag2
 COPY --from=geo_inter /ros2_ws/src/geo_interfaces /ros2_ws/src/geo_interfaces
 
 
