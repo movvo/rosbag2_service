@@ -1,5 +1,0 @@
-[submodule "rosbag2"]
-	path = rosbag2
-	url = https://github.com/movvo/rosbag2
-    branch = humble_movvo
-
