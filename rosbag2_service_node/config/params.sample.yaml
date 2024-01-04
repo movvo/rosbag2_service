@@ -6,7 +6,7 @@
   #     NODO
   # ===================
   ros__parameters:
-    # ----- ME00_camera PARAMS -----
+    # ----- PARAMS -----
     autorun: true
     topics: [] #Write the topics to store in the rosbag here separated 
                #by commasa e.g. ["/topic1", "/topic2"] 
